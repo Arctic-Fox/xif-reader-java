@@ -1,6 +1,7 @@
 package org.kcs.util.xif.core;
 
 import java.io.File;
+
 import java.io.IOException;
 
 import com.drew.imaging.ImageMetadataReader;
@@ -9,8 +10,12 @@ import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.Tag;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class ImageReader {
 
+	private static final Logger logger = LogManager.getLogger(ImageReader.class);
 	private File sourceFile;
     private Metadata metadata;
 
@@ -42,11 +47,11 @@ public class ImageReader {
 	
 	public void setFile (File file) {
 		this.sourceFile = file;
-		System.out.println("File is set.");
+		logger.debug("File is set.");
 	}
 
 	private String outputMetaData(Metadata metaData) {
-		System.out.println("Any directories?");
+		logger.debug("Any directories?");
 		String outputString = "";
 		for (Directory directory : metaData.getDirectories()) {
 			for (Tag tag : directory.getTags()) {
@@ -54,7 +59,7 @@ public class ImageReader {
 			}
 			if (directory.hasErrors()) {
 				for (String error : directory.getErrors()) {
-					System.err.format("ERROR: %s", error);
+					logger.error("ERROR: %s", error);
 				}
 			}
 		}
