@@ -12,6 +12,11 @@ import com.drew.metadata.Tag;
 public class ImageReader {
 
 	private File sourceFile;
+    private Metadata metadata;
+
+    public ImageReader(Metadata metadata) {
+        this.metadata = metadata;
+    }
 
 	public ImageReader(File imageFile) {
 		this.sourceFile = imageFile;
@@ -19,25 +24,21 @@ public class ImageReader {
 	
 	public ImageReader() {
 	}
-
-	public String showOff() {
-		String output = "";
-		if (sourceFile != null) {
-			Metadata metaData;
-			try {
-				metaData = ImageMetadataReader.readMetadata(sourceFile);
-				output = outputMetaData(metaData);
-			} catch (ImageProcessingException e) {
-				System.out.println("Image Processing Exception");
-				e.printStackTrace();
-			} catch (IOException e) {
-				System.out.println("IOException");
-				e.printStackTrace();
-			}
-
-		}
-		return output;
-	}
+	
+    public String showOff() {
+        String output = "";
+        if (metadata == null) {
+            try {
+                metadata = readMetadata(sourceFile);
+            } catch (ImageProcessingException | IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        if (metadata != null) {
+            output = outputMetaData(metadata);
+        }
+        return output;
+    }
 	
 	public void setFile (File file) {
 		this.sourceFile = file;
@@ -50,8 +51,6 @@ public class ImageReader {
 		for (Directory directory : metaData.getDirectories()) {
 			for (Tag tag : directory.getTags()) {
 				outputString = outputString + String.format("[%s] - %s = %s", directory.getName(), tag.getTagName(), tag.getDescription() + "\n");
-//				System.out.format("[%s] - %s = %s", directory.getName(), tag.getTagName(), tag.getDescription());
-//				System.out.println("\n");
 			}
 			if (directory.hasErrors()) {
 				for (String error : directory.getErrors()) {
@@ -59,7 +58,14 @@ public class ImageReader {
 				}
 			}
 		}
-		System.out.println(outputString);
 		return outputString;
 	}
+	
+	public File getSourceFile() {
+	    return sourceFile;
+	}
+	
+    public Metadata readMetadata(File file) throws ImageProcessingException, IOException {
+        return ImageMetadataReader.readMetadata(file);
+    }
 }

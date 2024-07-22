@@ -15,14 +15,13 @@ public class RunButton extends JButton {
 	 */
 	private static final long serialVersionUID = -8660525141119725126L;
 
-	public RunButton(ImageReader reader, JTextArea textArea) {
+	public RunButton(final ImageReader reader, final JTextArea textArea) {
 		super("Run");
 		
-			this.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					textArea.setText(reader.showOff());
-				}
-			});
+		this.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				textArea.setText(reader.showOff());
+			}
+		});
 	}
 }
