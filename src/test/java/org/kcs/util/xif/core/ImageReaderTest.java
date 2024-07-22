@@ -53,7 +53,7 @@ public class ImageReaderTest {
         try {
             when(imageMetadataReader.readMetadata(file)).thenThrow(new ImageProcessingException("Test Exception"));
         } catch (ImageProcessingException | IOException e) {
-            // Handle the exception
+        	//TODO: Handle the exception
         }
         
         ImageReader imageReader = new ImageReader(file) {
